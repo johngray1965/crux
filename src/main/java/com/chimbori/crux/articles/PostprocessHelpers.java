@@ -12,6 +12,7 @@ import org.jsoup.select.Elements;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -190,9 +191,11 @@ class PostprocessHelpers {
     for (Element childElement : node.children()) {
       removeDisallowedAttributes(childElement);
     }
-    for (Attribute attribute : node.attributes()) {
+    Iterator<Attribute> it = node.attributes().iterator();
+    while (it.hasNext()) {
+      Attribute attribute = it.next();
       if (!ATTRIBUTES_TO_RETAIN_IN_HTML.contains(attribute.getKey())) {
-        node.removeAttr(attribute.getKey());
+        it.remove();
       }
     }
   }
