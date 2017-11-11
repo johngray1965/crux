@@ -12,7 +12,8 @@ import org.jsoup.select.Elements;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -191,12 +192,14 @@ class PostprocessHelpers {
     for (Element childElement : node.children()) {
       removeDisallowedAttributes(childElement);
     }
-    Iterator<Attribute> it = node.attributes().iterator();
-    while (it.hasNext()) {
-      Attribute attribute = it.next();
+    List<String> keysToRemove = new LinkedList<>();
+    for (Attribute attribute : node.attributes()) {
       if (!ATTRIBUTES_TO_RETAIN_IN_HTML.contains(attribute.getKey())) {
-        it.remove();
+        keysToRemove.add(attribute.getKey());
       }
+    }
+    for (String key: keysToRemove) {
+      node.removeAttr(key);
     }
   }
 
